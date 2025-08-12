@@ -72,35 +72,47 @@ async def generate_dream_content(request: DreamRequest):
         # Generate session ID if not provided
         session_id = request.session_id or str(uuid.uuid4())
         
-        # Initialize LLM chat for story generation
+        generated_story = ""
+        
+        # Try LLM generation first
         api_key = os.environ.get('EMERGENT_LLM_KEY')
-        if not api_key:
-            raise HTTPException(status_code=500, detail="LLM API key not configured")
-        
-        # Create story generation prompt
-        system_message = """You are a creative storyteller who transforms dreams into vivid, cinematic narratives. 
-        Your task is to take a dream description and convert it into a well-structured story with:
-        1. Clear scene descriptions suitable for video generation
-        2. Engaging narrative flow
-        3. Rich visual details
-        4. Emotional depth
-        5. A coherent beginning, middle, and end
-        
-        Keep the story between 200-500 words and make it suitable for video/audio generation."""
-        
-        chat = LlmChat(
-            api_key=api_key,
-            session_id=session_id,
-            system_message=system_message
-        ).with_model("openai", "gpt-4o-mini")
-        
-        # Generate story from dream
-        user_message = UserMessage(
-            text=f"Transform this dream into a compelling story: {request.dream_text}"
-        )
-        
-        story_response = await chat.send_message(user_message)
-        generated_story = story_response
+        if api_key:
+            try:
+                # Create story generation prompt
+                system_message = """You are a creative storyteller who transforms dreams into vivid, cinematic narratives. 
+                Your task is to take a dream description and convert it into a well-structured story with:
+                1. Clear scene descriptions suitable for video generation
+                2. Engaging narrative flow
+                3. Rich visual details
+                4. Emotional depth
+                5. A coherent beginning, middle, and end
+                
+                Keep the story between 200-500 words and make it suitable for video/audio generation."""
+                
+                chat = LlmChat(
+                    api_key=api_key,
+                    session_id=session_id,
+                    system_message=system_message
+                ).with_model("openai", "gpt-4o-mini")
+                
+                # Generate story from dream
+                user_message = UserMessage(
+                    text=f"Transform this dream into a compelling story: {request.dream_text}"
+                )
+                
+                story_response = await chat.send_message(user_message)
+                generated_story = story_response
+                logging.info("LLM story generation successful")
+                
+            except Exception as llm_error:
+                logging.error(f"LLM generation failed: {str(llm_error)}")
+                # Fallback to template-based story generation
+                generated_story = generate_fallback_story(request.dream_text)
+                logging.info("Using fallback story generation")
+        else:
+            # No API key available, use fallback
+            generated_story = generate_fallback_story(request.dream_text)
+            logging.info("No LLM API key, using fallback story generation")
         
         # Create dream generation record
         dream_gen = DreamGeneration(
