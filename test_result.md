@@ -220,9 +220,8 @@ metadata:
 test_plan:
   current_focus:
     - "LLM Dream Story Generation API"
-    - "Dream Generation Data Models"
-    - "MongoDB Dream Storage"
-  stuck_tasks: []
+  stuck_tasks:
+    - "LLM Dream Story Generation API"
   test_all: false
   test_priority: "high_first"
 
