@@ -107,39 +107,48 @@ user_problem_statement: "Create a mobile application to generate videos from tex
 backend:
   - task: "LLM Dream Story Generation API"
     implemented: true
-    working: "NA"
+    working: false
     file: "/app/backend/server.py"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Implemented generate-dream endpoint with emergentintegrations LLM chat using Emergent Universal Key. Endpoint converts dream text into compelling stories suitable for video generation."
+      - working: false
+        agent: "testing"
+        comment: "LLM integration fails with 'litellm.InternalServerError: OpenAIException - Connection error' when called from FastAPI context. However, identical LLM code works perfectly when tested in isolation, generating 3000+ character stories. This indicates a network/environment issue specific to the server context, not a code implementation problem."
 
   - task: "Dream Generation Data Models"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Created DreamRequest and DreamGeneration models with UUID-based IDs, session management, and support for video/podcast formats."
+      - working: true
+        agent: "testing"
+        comment: "Data models working correctly. Request validation, UUID generation, and response serialization all functional. Models properly handle video/podcast formats and session management."
 
   - task: "MongoDB Dream Storage"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Implemented database operations for storing dream generations with session support and retrieval endpoints."
+      - working: true
+        agent: "testing"
+        comment: "MongoDB operations fully functional. Database connection established, CRUD operations working, session-based retrieval working, proper 404 handling for nonexistent records. All endpoints tested successfully."
 
   - task: "Video/Audio Generation Placeholders"
     implemented: true
