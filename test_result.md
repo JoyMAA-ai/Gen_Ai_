@@ -220,3 +220,5 @@ test_plan:
 agent_communication:
   - agent: "main"
     message: "Initial implementation complete. Dream Teller app built with React frontend and FastAPI backend. Core features include dream text input, LLM story generation using Emergent Universal Key, format selection (video/podcast), and results display. Backend endpoints implemented with MongoDB storage. Ready for backend testing to verify LLM integration and API functionality."
+  - agent: "testing"
+    message: "Backend testing completed. API infrastructure working perfectly - FastAPI server, MongoDB operations, routing, error handling, and data models all functional. However, LLM integration fails with connection errors when called from FastAPI context, despite working perfectly in isolation. This appears to be an environment/network issue specific to the server context. All non-LLM endpoints pass tests."
