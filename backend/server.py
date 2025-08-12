@@ -52,6 +52,19 @@ class StatusCheck(BaseModel):
 class StatusCheckCreate(BaseModel):
     client_name: str
 
+# Fallback story generation function
+def generate_fallback_story(dream_text: str) -> str:
+    """Generate a basic story template when LLM is unavailable"""
+    return f"""In a world where dreams come alive, a remarkable vision unfolds.
+
+{dream_text}
+
+This dream carries deep meaning, weaving together elements of the subconscious mind. The imagery speaks to universal themes of transformation, discovery, and the mysterious nature of our inner world.
+
+As the dream progresses, each scene builds upon the last, creating a narrative that bridges the gap between sleep and wakefulness. The vivid details paint a picture that could easily translate into a compelling visual story.
+
+The dream concludes with a sense of wonder, leaving the dreamer with lasting impressions that continue to resonate long after awakening. This is the power of dreams - to transport us to realms beyond our everyday experience and reveal truths about ourselves we never knew existed."""
+
 # Dream generation endpoint
 @api_router.post("/generate-dream", response_model=DreamGeneration)
 async def generate_dream_content(request: DreamRequest):
